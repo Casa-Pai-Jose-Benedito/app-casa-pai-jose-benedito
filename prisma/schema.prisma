@@ -1,0 +1,198 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TerreiroRole {
+  pai
+  mae
+  pais_menores
+  filho
+  assistencia
+}
+
+enum EventCategory {
+  gira
+  cerimonia
+  reserva_espaco
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  role      TerreiroRole
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userRoles        UserRole[]
+  userPermissions  UserPermission[]
+  createdEvents    Event[]
+  eventParticipants EventParticipant[]
+  grantedRoles     UserRole[]       @relation("GrantedBy")
+  grantedPermissions UserPermission[] @relation("GrantedBy")
+  feedPosts        FeedPost[]
+  feedLikes        FeedLike[]
+  meetingMinutes   MeetingMinute[]
+  comments         Comment[]
+  consents         UserConsent[]
+
+  @@map("users")
+}
+
+model UserRole {
+  userId    String
+  role      TerreiroRole
+  grantedBy String?
+  grantedAt DateTime @default(now())
+
+  user      User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  granter   User? @relation("GrantedBy", fields: [grantedBy], references: [id])
+
+  @@id([userId, role])
+  @@map("user_roles")
+}
+
+model Permission {
+  id       String @id @default(cuid())
+  category String
+  action   String
+  resource String
+
+  userPermissions UserPermission[]
+
+  @@unique([category, action, resource])
+  @@map("permissions")
+}
+
+model UserPermission {
+  userId       String
+  permissionId String
+  grantedBy    String?
+  grantedAt    DateTime @default(now())
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  granter    User?      @relation("GrantedBy", fields: [grantedBy], references: [id])
+
+  @@id([userId, permissionId])
+  @@map("user_permissions")
+}
+
+model Event {
+  id               String        @id @default(cuid())
+  title            String
+  description      String?
+  category         EventCategory
+  startTime        DateTime
+  endTime          DateTime
+  createdBy        String
+  maxParticipants  Int?
+  
+  reservationType  String?
+  participantCount Int?          @default(1)
+  
+  spiritualEntities String[]
+  
+  createdAt        DateTime      @default(now())
+
+  creator      User                @relation(fields: [createdBy], references: [id])
+  participants EventParticipant[]
+
+  @@map("events")
+}
+
+model EventParticipant {
+  id           String    @id @default(cuid())
+  eventId      String
+  userId       String
+  entityWork   String?
+  checkedIn    Boolean   @default(false)
+  checkInTime  DateTime?
+  notes        String?
+  registeredAt DateTime  @default(now())
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@unique([eventId, userId])
+  @@map("event_participants")
+}
+
+model FeedPost {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  authorId  String
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author   User       @relation(fields: [authorId], references: [id])
+  likes    FeedLike[]
+  comments Comment[]
+
+  @@map("feed_posts")
+}
+
+model FeedLike {
+  id     String @id @default(cuid())
+  postId String
+  userId String
+
+  post FeedPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@map("feed_likes")
+}
+
+model Comment {
+  id       String @id @default(cuid())
+  content  String
+  authorId String
+  postId   String
+  createdAt DateTime @default(now())
+
+  author User     @relation(fields: [authorId], references: [id])
+  post   FeedPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
+}
+
+model MeetingMinute {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  authorId  String
+  meetingDate DateTime
+  createdAt DateTime @default(now())
+
+  author User @relation(fields: [authorId], references: [id])
+
+  @@map("meeting_minutes")
+}
+
+model UserConsent {
+  id              String    @id @default(cuid())
+  userId          String
+  privacyPolicyVersion String
+  consentedAt     DateTime  @default(now())
+  withdrawnAt     DateTime?
+  ipAddress       String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_consents")
+}
