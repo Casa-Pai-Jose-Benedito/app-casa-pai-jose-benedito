@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@theme {
+  --color-terreiro-50: #fef7ee;
+  --color-terreiro-100: #fdecd6;
+  --color-terreiro-200: #fad5a5;
+  --color-terreiro-300: #f6b574;
+  --color-terreiro-400: #f08936;
+  --color-terreiro-500: #ea580c;
+  --color-terreiro-600: #dc2626;
+  --color-terreiro-700: #b91c1c;
+  --color-terreiro-800: #991b1b;
+  --color-terreiro-900: #7f1d1d;
+
+  --color-casa-oxala: #ffffff;
+  --color-casa-loguna: #0A2A72;
+  --color-casa-iemanja: #87CEEB;
+  --color-casa-xango: #8B4513;
+  --color-casa-ogum: #dc2626;
+  --color-casa-oxossi: #0f5132;
+  --color-casa-oba: #ff1493;
+  --color-casa-obaluae: #ffffff;
+  --color-casa-omulu: #ffffff;
+  --color-casa-oxum: #ffd700;
+  --color-casa-oxumare: #9400d3;
+  --color-casa-nana: #9370db;
+  --color-casa-logunede: #9EE4F0;
+  --color-casa-egunita: #ff8c00;
+  --color-casa-ossain: #228b22;
+
+  --color-casa-caboclos: #0f5132;
+  --color-casa-pretos-velho: #ffffff;
+  --color-casa-eres: #FE98C2;
+  --color-casa-boiadeiros: #8B4513;
+  --color-casa-marinheiros: #87CEEB;
+  --color-casa-baianos: #8B4513;
+  --color-casa-ciganos: #ffd700;
+  --color-casa-malandros: #ffffff;
+  --color-casa-exus: #000000;
+  --color-casa-pombo-giras: #dc2626;
+  --color-casa-exu-mirins: #000000;
+  --color-casa-sereias-oxum: #ffd700;
+  --color-casa-sereias-iemanja: #87CEEB;
+
+  --color-hierarchy-pai: #7c2d12;
+  --color-hierarchy-mae: #be185d;
+  --color-hierarchy-pais-menores: #9333ea;
+  --color-hierarchy-filho: #0369a1;
+  --color-hierarchy-assistencia: #64748b;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Inter, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .text-spiritual-caboclo {
+    color: var(--color-spiritual-caboclo);
+  }
+  
+  .text-spiritual-preto-velho {
+    color: var(--color-spiritual-preto-velho);
+  }
+  
+  .text-spiritual-exu {
+    color: var(--color-spiritual-exu);
+  }
+  
+  .text-spiritual-orixas {
+    color: var(--color-spiritual-orixas);
+  }
+  
+  .text-hierarchy-pai {
+    color: var(--color-hierarchy-pai);
+  }
+  
+  .text-hierarchy-mae {
+    color: var(--color-hierarchy-mae);
+  }
+  
+  .text-hierarchy-pais-menores {
+    color: var(--color-hierarchy-pais-menores);
+  }
+  
+  .text-hierarchy-filho {
+    color: var(--color-hierarchy-filho);
+  }
+  
+  .text-hierarchy-assistencia {
+    color: var(--color-hierarchy-assistencia);
+  }
+}
